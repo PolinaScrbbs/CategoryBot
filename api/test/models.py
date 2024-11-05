@@ -32,7 +32,9 @@ class TestResult(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     test_id = Column(Integer, ForeignKey("tests.id"), nullable=False)
     result = Column(CHAR(9), default="0 0 0 0 0", nullable=False)
-    created_at = Column(DateTime, server_default=func.now(), default=datetime.utcnow, nullable=False)
+    created_at = Column(
+        DateTime, server_default=func.now(), default=datetime.utcnow, nullable=False
+    )
     end_at = Column(DateTime, default=None)
 
     user = relationship("User", back_populates="test_results")
