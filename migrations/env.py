@@ -2,7 +2,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from api.user.models import Base
+from api.category.models import Base
 
 from alembic import context
 from config import DATABASE_URL

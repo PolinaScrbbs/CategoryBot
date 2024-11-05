@@ -13,14 +13,6 @@ async def admin_check(user: User):
         )
 
 
-async def cashier_check(user: User):
-    if user.role is Role.USER:
-        raise HTTPException(
-            status.HTTP_403_FORBIDDEN,
-            "Пользователи не имеют достпуп к этому ендпоинту",
-        )
-
-
 async def user_exists_by_username(session: AsyncSession, username: str) -> bool:
     result = await session.execute(select(exists().where(User.username == username)))
     return result.scalar()
