@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from ..user.models import Base
 
+
 class Category(Base):
     __tablename__ = "categories"
 
@@ -10,7 +11,10 @@ class Category(Base):
     title = Column(String(20), unique=True, nullable=False)
     description = Column(String(256), nullable=False)
 
-    questions = relationship("CategoryQuestion", back_populates="category", cascade="all, delete-orphan")
+    questions = relationship(
+        "CategoryQuestion", back_populates="category", cascade="all, delete-orphan"
+    )
+
 
 class CategoryQuestion(Base):
     __tablename__ = "category_questions"
