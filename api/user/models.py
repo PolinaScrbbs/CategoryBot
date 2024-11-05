@@ -38,6 +38,9 @@ class User(Base):
     full_name = Column(String(40), nullable=False)
 
     token = relationship("Token", back_populates="user")
+    test_results = relationship(
+        "TestResult", back_populates="user", cascade="all, delete-orphan"
+    )
 
     async def set_password(self, password: str) -> None:
         self.hashed_password = bcrypt.hashpw(

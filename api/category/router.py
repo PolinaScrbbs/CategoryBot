@@ -2,8 +2,6 @@ from typing import List, Optional, Union
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.category.models import Category
-
 from ..database import get_session
 from ..auth.queries import get_current_user
 from ..user.models import User
@@ -25,7 +23,7 @@ router = APIRouter(prefix="/categories")
 async def create_category(
     category_data: CategoryCreate,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user)
 ):
     await ut.admin_check(current_user)
     created_category = await qr.create_category(session, category_data)
