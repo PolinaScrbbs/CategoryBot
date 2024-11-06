@@ -15,17 +15,21 @@ class TestWithoutQuestionsAndResult(BaseModel):
     title: str
     description: str
 
+
 class TestQuestionsWithoutTest(BaseModel):
     id: int
     content: str
     result: str
-    
+
+
 class TestInDB(TestWithoutQuestionsAndResult):
     questions: List[TestQuestionsWithoutTest]
+
 
 class TestResultCreate(BaseModel):
     test_id: int = 1
     result: str = "0 0 0 0 0"
+
 
 class TestResultInDB(BaseModel):
     id: int
@@ -37,5 +41,3 @@ class TestResultInDB(BaseModel):
 
     class Config:
         from_attributes = True
-
-

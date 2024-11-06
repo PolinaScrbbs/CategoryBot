@@ -6,7 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..user.models import Role
 from .models import Test, TestResult
-from .schemes import TestCreate, TestResultCreate, TestResultInDB, TestWithoutQuestionsAndResult
+from .schemes import (
+    TestCreate,
+    TestResultCreate,
+    TestResultInDB,
+    TestWithoutQuestionsAndResult,
+)
 from .utils import test_exists_by_title, test_result_exists
 
 
@@ -34,8 +39,9 @@ async def get_tests(
 
     if not tests:
         return HTTPException(status.HTTP_204_NO_CONTENT)
-    
+
     return tests
+
 
 async def get_test_result_by_id(
     session: AsyncSession, test_result_id: int
@@ -49,6 +55,7 @@ async def get_test_result_by_id(
     )
 
     return result.scalar()
+
 
 async def create_test_result(
     session: AsyncSession, current_user_id: int, test_result_data: TestResultCreate
@@ -65,4 +72,3 @@ async def create_test_result(
 
     test_result = await get_test_result_by_id(session, new_test_result.id)
     return test_result
-

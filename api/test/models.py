@@ -28,9 +28,7 @@ class TestQuestion(Base):
     content = Column(String(64), unique=True, nullable=False)
     result = Column(CHAR(9), nullable=False)
 
-    test = relationship(
-        "Test", back_populates="questions"
-    )
+    test = relationship("Test", back_populates="questions")
 
 
 class TestResult(Base):
