@@ -4,8 +4,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..user.models import Role
 from .models import Test, TestResult
-from .schemes import TestCreate, TestResultCreate, TestResultInDB
+from .schemes import TestCreate, TestResultCreate, TestResultInDB, TestWithoutQuestionsAndResult
 from .utils import test_exists_by_title, test_result_exists
 
 
@@ -19,6 +20,35 @@ async def create_test(session: AsyncSession, test_data: TestCreate) -> TestCreat
     await session.refresh(new_test)
     return new_test
 
+
+async def get_tests(
+    session: AsyncSession, current_user_role: str
+) -> TestWithoutQuestionsAndResult:
+    query = select(Test)
+
+    if current_user_role == Role.ADMIN:
+        query = query.options(selectinload(Test.questions))
+
+    result = await session.execute(query)
+    tests = result.scalars().all()
+
+    if not tests:
+        return HTTPException(status.HTTP_204_NO_CONTENT)
+    
+    return tests
+
+async def get_test_result_by_id(
+    session: AsyncSession, test_result_id: int
+) -> TestResultInDB:
+    await test_result_exists(session, test_result_id)
+
+    result = await session.execute(
+        select(TestResult)
+        .options(selectinload(TestResult.user), selectinload(TestResult.test))
+        .where(TestResult.id == test_result_id)
+    )
+
+    return result.scalar()
 
 async def create_test_result(
     session: AsyncSession, current_user_id: int, test_result_data: TestResultCreate
@@ -36,16 +66,3 @@ async def create_test_result(
     test_result = await get_test_result_by_id(session, new_test_result.id)
     return test_result
 
-
-async def get_test_result_by_id(
-    session: AsyncSession, test_result_id: int
-) -> TestResultInDB:
-    await test_result_exists(session, test_result_id)
-
-    result = await session.execute(
-        select(TestResult)
-        .options(selectinload(TestResult.user), selectinload(TestResult.test))
-        .where(TestResult.id == test_result_id)
-    )
-
-    return result.scalar()

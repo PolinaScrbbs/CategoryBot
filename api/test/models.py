@@ -12,6 +12,9 @@ class Test(Base):
     title = Column(String(30), unique=True, nullable=False)
     description = Column(String(64), nullable=False)
 
+    questions = relationship(
+        "TestQuestion", back_populates="test", cascade="all, delete-orphan"
+    )
     results = relationship(
         "TestResult", back_populates="test", cascade="all, delete-orphan"
     )
@@ -21,8 +24,13 @@ class TestQuestion(Base):
     __tablename__ = "test_questions"
 
     id = Column(Integer, primary_key=True)
+    test_id = Column(Integer, ForeignKey("tests.id"), default=1, nullable=False)
     content = Column(String(64), unique=True, nullable=False)
     result = Column(CHAR(9), nullable=False)
+
+    test = relationship(
+        "Test", back_populates="questions"
+    )
 
 
 class TestResult(Base):

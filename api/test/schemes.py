@@ -10,28 +10,32 @@ class TestCreate(BaseModel):
     description: str
 
 
-class TestWithoutResult(BaseModel):
+class TestWithoutQuestionsAndResult(BaseModel):
     id: int
     title: str
     description: str
 
-
-class TestInDB(TestWithoutResult):
-    pass
-
+class TestQuestionsWithoutTest(BaseModel):
+    id: int
+    content: str
+    result: str
+    
+class TestInDB(TestWithoutQuestionsAndResult):
+    questions: List[TestQuestionsWithoutTest]
 
 class TestResultCreate(BaseModel):
     test_id: int = 1
     result: str = "0 0 0 0 0"
 
-
 class TestResultInDB(BaseModel):
     id: int
     user: BaseUser
-    test: TestWithoutResult
+    test: TestWithoutQuestionsAndResult
     result: str
     created_at: datetime
     end_at: Optional[datetime]
 
     class Config:
         from_attributes = True
+
+
